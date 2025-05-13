@@ -34,14 +34,24 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
+      - name: Install Heroku CLI
+        run: |
+         curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy to Heroku
-        uses: amondnet/heroku-deploy@v3.13.9
-        with:
-         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-         heroku_app_name: securecart-eshapatel
-         heroku_email: eshapatel1@live.co.uk
-         usedocker: false
-         branch: main
+        env:
+         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+         echo "machine api.heroku.com" > ~/.netrc
+         echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
+         echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
+         echo "machine git.heroku.com" >> ~/.netrc
+         echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
+         echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
+
+         heroku git:remote -a securecart-eshapatel
+         git push heroku main --force
+
 
 
 
