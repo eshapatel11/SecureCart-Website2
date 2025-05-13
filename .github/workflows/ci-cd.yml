@@ -35,8 +35,9 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Heroku using Heroku CLI
-  uses: akhileshns/heroku-deploy@v3.12.12
-  with:
-    heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-    heroku_app_name: "securecart-eshapatel"
-    heroku_email: "eshapatel1@live.co.uk"
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+         heroku_app_name: "securecart-eshapatel"
+         heroku_email: "eshapatel1@live.co.uk"
+
