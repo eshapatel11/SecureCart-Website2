@@ -34,14 +34,15 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
-      - name: Deploy to Heroku (official action)
-        uses: amondnet/heroku-deploy@v3.13.2
+      - name: Deploy to Heroku
+        uses: amondnet/heroku-deploy@v3.13.9
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: securecart-eshapatel
-          heroku_email: eshapatel1@live.co.uk
-          usedocker: false
-          branch: main
+         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+         heroku_app_name: securecart-eshapatel
+         heroku_email: eshapatel1@live.co.uk
+         usedocker: false
+         branch: main
+
 
 
 
