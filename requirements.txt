@@ -5,4 +5,5 @@ psycopg2-binary
 whitenoise
 django-widget-tweaks
 xhtml2pdf
-
+cloudinary
+django-cloudinary-storage
