@@ -41,6 +41,7 @@ jobs:
       - name: Deploy to Heroku
         env:
          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+         HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
         run: |
          echo "machine api.heroku.com" > ~/.netrc
          echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
@@ -49,8 +50,10 @@ jobs:
          echo "  login ${{ secrets.HEROKU_EMAIL }}" >> ~/.netrc
          echo "  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
 
-         heroku git:remote -a securecart-eshapatel
+         git remote add heroku https://git.heroku.com/securecart-eshapatel.git
+         git fetch --unshallow  # 🔧 This is the key fix
          git push heroku main --force
+
 
 
 
