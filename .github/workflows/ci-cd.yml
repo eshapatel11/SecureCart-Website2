@@ -23,6 +23,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Django checks
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
           python manage.py check
 
@@ -35,6 +37,7 @@ jobs:
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
           git remote add heroku https://git.heroku.com/securecart-eshapatel.git
           git push heroku main --force
