@@ -35,7 +35,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Heroku (official action)
-        uses: heroku/heroku-deploy@v2
+        uses: amondnet/heroku-deploy@v3.13.2
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: securecart-eshapatel
