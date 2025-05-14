@@ -74,15 +74,11 @@ jobs:
 
       - name: Run OWASP ZAP full scan manually in container
         run: |
-          docker run --name zap-container --network="host" ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
+          docker run --rm --user root \
+            -v ${{ github.workspace }}/zap-output:/zap/wrk/:rw \
+            --network="host" ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
             -t https://securecart-eshapatel-df12c7c8828c.herokuapp.com/ \
-            -J /zap/report_json.json -w /zap/report_md.md -r /zap/report_html.html
-
-      - name: Copy ZAP reports from container
-        run: |
-          docker cp zap-container:/zap/report_json.json zap-output/report_json.json
-          docker cp zap-container:/zap/report_md.md zap-output/report_md.md
-          docker cp zap-container:/zap/report_html.html zap-output/report_html.html
+            -J report_json.json -w report_md.md -r report_html.html
 
       - name: Upload ZAP scan results
         uses: actions/upload-artifact@v4
