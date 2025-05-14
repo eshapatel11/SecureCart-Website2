@@ -63,13 +63,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Create ZAP output folder
+        run: mkdir zap-output
+
       - name: Pull ZAP container
         run: docker pull ghcr.io/zaproxy/zaproxy:stable
 
       - name: Run OWASP ZAP full scan manually
         run: |
-          docker run -v ${{ github.workspace }}:/zap/wrk/:rw \
-            --network=host ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
+          docker run -v ${{ github.workspace }}/zap-output:/zap/wrk/:rw \
+            --network="host" ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
             -t https://securecart-eshapatel-df12c7c8828c.herokuapp.com/ \
             -J report_json.json -w report_md.md -r report_html.html
 
@@ -78,6 +81,6 @@ jobs:
         with:
           name: zapscanreport
           path: |
-            report_json.json
-            report_md.md
-            report_html.html
+            zap-output/report_json.json
+            zap-output/report_md.md
+            zap-output/report_html.html
