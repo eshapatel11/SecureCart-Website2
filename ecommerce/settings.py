@@ -30,7 +30,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['securecart-eshapatel-df12c7c8828c.herokuapp.com', 'securecart-eshapatel.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'securecart-eshapatel-df12c7c8828c.herokuapp.com']
 
 
 # Application definition
