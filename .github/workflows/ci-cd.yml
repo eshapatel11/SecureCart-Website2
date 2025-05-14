@@ -63,8 +63,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Wait for Heroku app to be ready
+        run: sleep 45
+
       - name: Create ZAP output folder
-        run: mkdir zap-output
+        run: mkdir -p zap-output
 
       - name: Pull ZAP container
         run: docker pull ghcr.io/zaproxy/zaproxy:stable
