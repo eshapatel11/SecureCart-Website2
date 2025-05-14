@@ -1,4 +1,4 @@
-name: CI/CD Pipeline with Docker, Snyk, and ZAP
+name: CI Pipeline with Snyk and ZAP for Render
 
 on:
   push:
@@ -27,44 +27,15 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
-  heroku-deploy:
-    needs: security-scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Log in to Heroku Container Registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
-
-      - name: Build Docker image
-        run: docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
-
-      - name: Push Docker image to Heroku
-        run: docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-
-      - name: Release Docker image on Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          curl -n -X PATCH https://api.heroku.com/apps/${{ secrets.HEROKU_APP_NAME }}/formation \
-          -d '{"updates":[{"type":"web","docker_image":"'"$(docker inspect registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web --format={{.Id}})"'"}]}' \
-          -H "Content-Type: application/json" \
-          -H "Accept: application/vnd.heroku+json; version=3.docker-releases" \
-          -H "Authorization: Bearer $HEROKU_API_KEY"
-
   zap-dast:
-    needs: heroku-deploy
+    needs: security-scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Wait for Heroku app to be ready
-        run: sleep 60
+      - name: Wait for Render app to deploy
+        run: sleep 90
 
       - name: Create output folder
         run: mkdir -p zap-output
@@ -72,13 +43,13 @@ jobs:
       - name: Pull ZAP container
         run: docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      - name: Run OWASP ZAP full scan manually in container
+      - name: Run OWASP ZAP full scan
         continue-on-error: true
         run: |
           docker run --rm --user root \
             -v ${{ github.workspace }}/zap-output:/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
-            -t https://securecart-eshapatel-df12c7c8828c.herokuapp.com/ \
+            -t https://securecart-website2.onrender.com \
             -J report_json.json -w report_md.md -r report_html.html
 
       - name: Upload ZAP scan results
