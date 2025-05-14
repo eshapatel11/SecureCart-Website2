@@ -60,11 +60,18 @@ jobs:
     needs: heroku-deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Run OWASP ZAP full scan
-        uses: zaproxy/action-full-scan@v0.7.0
-        with:
-          target: 'https://securecart-eshapatel-df12c7c8828c.herokuapp.com/'
-          cmd_options: '-J report_json.json -w report_md.md -r report_html.html'
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Pull ZAP container
+        run: docker pull ghcr.io/zaproxy/zaproxy:stable
+
+      - name: Run OWASP ZAP full scan manually
+        run: |
+          docker run -v ${{ github.workspace }}:/zap/wrk/:rw \
+            --network=host ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
+            -t https://securecart-eshapatel-df12c7c8828c.herokuapp.com/ \
+            -J report_json.json -w report_md.md -r report_html.html
 
       - name: Upload ZAP scan results
         uses: actions/upload-artifact@v4
