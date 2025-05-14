@@ -67,7 +67,7 @@ jobs:
           cmd_options: '-J report_json.json -w report_md.md -r report_html.html'
 
       - name: Upload ZAP scan results
-        uses: actions/upload-artifact@b4bd81bcf422a7f5426f173e834b2f39ec2fc8f5
+        uses: actions/upload-artifact@v4
         with:
           name: zapscanreport
           path: |
