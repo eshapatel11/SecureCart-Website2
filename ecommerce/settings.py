@@ -10,29 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-
 import os
 from decouple import config
 
 RENDER = os.environ.get('RENDER', None)
+
+# Define ALLOWED_HOSTS first
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 if RENDER:
     ALLOWED_HOSTS.append('securecart.onrender.com')
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_DIR=os.path.join(BASE_DIR,'static')
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+STATIC_DIR = os.path.join(BASE_DIR,'static')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['securecart.onrender.com']
+
 
 
 
