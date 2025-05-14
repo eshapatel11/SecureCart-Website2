@@ -64,4 +64,3 @@ jobs:
         uses: zaproxy/action-full-scan@v0.7.0
         with:
           target: 'https://securecart-eshapatel-df12c7c8828c.herokuapp.com/'
-          artifact_name: zapscanreport  # No dashes!
