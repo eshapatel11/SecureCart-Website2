@@ -23,6 +23,8 @@ COPY . .
 # Collect static files
 CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn ecommerce.wsgi:application --bind 0.0.0.0:8000"]
 
+
+
 # Expose port (default Django port)
 EXPOSE 8000
 
