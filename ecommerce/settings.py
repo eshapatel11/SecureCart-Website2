@@ -14,6 +14,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from decouple import config
 
+RENDER = os.environ.get('RENDER', None)
+if RENDER:
+    ALLOWED_HOSTS.append('securecart.onrender.com')
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,10 +31,9 @@ STATIC_DIR=os.path.join(BASE_DIR,'static')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['securecart.onrender.com']
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'securecart-eshapatel-df12c7c8828c.herokuapp.com']
 
 
 # Application definition
@@ -68,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -164,3 +169,5 @@ EMAIL_HOST_PASSWORD = '123' # host email password required
 # otherwise you will get SMTPAuthenticationError at /contactus
 # this process is required because google blocks apps authentication by default
 EMAIL_RECEIVING_USER = ['to@gmail.com'] # email on which you will receive messages sent from website
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
