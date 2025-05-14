@@ -20,13 +20,15 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project files
 COPY . .
 
-# Collect static files
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn ecommerce.wsgi:application --bind 0.0.0.0:8000"]
+# Add entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 
-
-# Expose port (default Django port)
+# Expose port
 EXPOSE 8000
 
-# Run the app using gunicorn
-CMD ["gunicorn", "ecommerce.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Use entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+
